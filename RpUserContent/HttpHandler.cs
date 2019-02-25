@@ -20,6 +20,10 @@ namespace RpUserContent
                 {
                     return Services.UploadService.OnHttpRequest(e);
                 }
+                if (e.Request.Path == "/upload_token")
+                {
+                    return Services.UploadTokenService.OnHttpRequest(e);
+                }
                 if (e.Request.Path.ToString().StartsWith("/u/"))
                 {
                     return Services.ImageRequestService.OnHttpRequest(e, e.Request.Path.ToString().Substring(3));
