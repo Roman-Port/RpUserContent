@@ -1,0 +1,14 @@
+﻿{
+  "port": 43293,
+  "maximum_upload_size": 31457280,
+  "database_path": "E:\\RpUserContent\\data.db",
+  "uploaded_content_path": "E:\\RpUserContent\\content\\",
+  "applications": [
+    {
+      "id": "Pc2Pk44XevX6C42m6Xu3Ag6J",
+      "name": "Ark Web Map Server Images",
+      "upload_type": 2,
+      "mandatedMimeType": "image/png"
+    }
+  ]
+}

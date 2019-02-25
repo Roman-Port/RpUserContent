@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LiteDB;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using RpUserContent.Entities;
+using RpUserContent.PersistEntities;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +16,25 @@ namespace RpUserContent
     class Program
     {
         public static Random rand = new Random();
+        public static RpConfig config;
+        public static LiteDatabase db;
+        public static Dictionary<string, UserContentFileEntry> fileCreationTokens = new Dictionary<string, UserContentFileEntry>(); //Tokens that are one-time use and can be used to securely send the server data that the client has
 
         static void Main(string[] args)
         {
+            Log("Loading config...", ConsoleColor.White);
+            config = JsonConvert.DeserializeObject<RpConfig>(File.ReadAllText("config.json"));
+
+            Log("Loading database...", ConsoleColor.White);
+            db = new LiteDatabase(config.database_path);
+
+            Log("Starting Kestrel...", ConsoleColor.White);
             MainAsync().GetAwaiter().GetResult();
+        }
+
+        public static LiteCollection<UserContentFileEntry> GetFileEntryCollection()
+        {
+            return db.GetCollection<UserContentFileEntry>("uploads");
         }
 
         public static void Log(string message, ConsoleColor color)
@@ -31,7 +50,7 @@ namespace RpUserContent
                 .UseKestrel(options =>
                 {
                     IPAddress addr = IPAddress.Any;
-                    options.Listen(addr, 43298);
+                    options.Listen(addr, config.port);
 
                 })
                 .UseStartup<Program>()
